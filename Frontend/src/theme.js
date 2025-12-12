@@ -5,7 +5,7 @@ const theme = createTheme({
         'none',
         '0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.06)', 
         ...Array(23).fill('none'), 
-    ],
+    ], 
     palette: {
         primary: {
             main: "#00A76F", // Green theme color (Screenshot's primary)
@@ -17,6 +17,7 @@ const theme = createTheme({
         text: {
             primary: "#1C252E",
             secondary: "#637381",
+            other:'#fff'
         },
         background: {
             default: "#fff", // Slightly off-white for main background

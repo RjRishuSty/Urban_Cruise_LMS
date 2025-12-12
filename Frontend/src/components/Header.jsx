@@ -7,19 +7,23 @@ import {
   Badge,
   Avatar,
   Typography,
-  InputBase,
   Button,
 } from "@mui/material";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useTheme } from "@mui/material/styles";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { flexCenter } from "../constants/flexUtils";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { handleLogout } from "../utils/authFormHandler";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <AppBar
@@ -74,12 +78,13 @@ const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
           </IconButton>
 
           <IconButton
+          onClick={() => handleLogout(dispatch, navigate)}
             sx={{
               bgcolor: "primary.light",
               "&:hover": { bgcolor: "action.hover" },
             }}
           >
-            <SettingsOutlinedIcon color="action" />
+            <LogoutIcon color="action" />
           </IconButton>
           <Avatar
             alt="Jaydon Frankie"

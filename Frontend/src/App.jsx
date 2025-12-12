@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthPages from "./pages/AuthPages";
 import AppLayout from "./layout/AppLayout";
 import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -11,8 +12,9 @@ const App = () => {
       element: <AppLayout />,
       children: [
         {
-          path:'dashboard',
-          element: <Dashboard/>
+          path: "",
+          element: <PrivateRoute />,
+          children: [{ path: "", element: <Dashboard /> }],
         },
         {
           path: "sign-in",

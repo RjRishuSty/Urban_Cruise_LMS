@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { flexCenter, flexEnd } from "../constants/flexUtils";
 import { authInputs } from "../constants/authInputs";
 import { authObject } from "../constants/authObject";
 import InputsField from "../components/InputsField";
+import { useDispatch } from "react-redux";
+import { authFormHandler } from "../utils/authFormHandler";
+import { useSnackbar } from "notistack"; 
 
 const AuthPages = () => {
   const { pathname } = useLocation();
+   const { enqueueSnackbar } = useSnackbar(); 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -17,6 +24,23 @@ const AuthPages = () => {
   const handleOnChage = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+       const result = await authFormHandler(formData, pageType, dispatch, enqueueSnackbar);
+
+      if (result.success) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const pageType = pathname.includes("sign-in") ? "sign-in" : "sign-up";
   const {
     heading,
@@ -88,11 +112,18 @@ const AuthPages = () => {
                 {formLinkText}
               </Typography>
             </Typography>
-            <Grid container rowSpacing={2} columnSpacing={2} sx={{ py: 2, mt: 3 }}>
+            <Grid
+            component='form'
+            onSubmit={handleSubmit}
+              container
+              rowSpacing={2}
+              columnSpacing={2}
+              sx={{ py: 2, mt: 3 }}
+            >
               {authInputs[pageType].map((item) => {
                 const fullname =
                   item.id === "firstName" || item.id === "lastName";
-                const isSignIn = pageType === "sign-in" && item.id ==='email';
+                const isSignIn = pageType === "sign-in" && item.id === "email";
                 return (
                   <React.Fragment key={item.id}>
                     <Grid size={{ xs: 12, sm: 12, md: fullname ? 6 : 12 }}>
@@ -102,10 +133,21 @@ const AuthPages = () => {
                         onChange={handleOnChage}
                       />
                     </Grid>
-                    {isSignIn &&  (
-                      <Grid size={{xs:12,sm:12,md:12}} sx={{...flexEnd}}>
-                        <Typography variant="body2"
-                          sx={{  cursor: "pointer",mt:-0.5,"&:hover":{textDecoration: "underline",color:'primary.main'} }}
+                    {isSignIn && (
+                      <Grid
+                        size={{ xs: 12, sm: 12, md: 12 }}
+                        sx={{ ...flexEnd }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            cursor: "pointer",
+                            mt: -0.5,
+                            "&:hover": {
+                              textDecoration: "underline",
+                              color: "primary.main",
+                            },
+                          }}
                         >
                           Forget password?
                         </Typography>
@@ -115,11 +157,13 @@ const AuthPages = () => {
                 );
               })}
               <Button
+                type="submit"
                 variant="contained"
                 fullWidth
+                 disabled={loading}
                 sx={{ py: 1.5, textTransform: "uppercase" }}
               >
-                {buttonLabel}
+                {loading ? "Please wait..." : buttonLabel}
               </Button>
             </Grid>
           </Stack>

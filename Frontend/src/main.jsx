@@ -5,12 +5,27 @@ import App from "./App.jsx";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./theme.js";
 import { CssBaseline } from "@mui/material";
+import { store } from "./store/store.js";
+import { Provider } from "react-redux";
+import { SnackbarProvider } from "notistack";
+
+
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+         <SnackbarProvider
+          maxSnack={2} 
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+        <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    </Provider>
   </StrictMode>
 );

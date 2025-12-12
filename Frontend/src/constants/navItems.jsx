@@ -12,7 +12,7 @@ export const navItems = [
   {
     subheader: "OVERVIEW",
     items: [
-      { title: "Dashboard", icon: DashboardIcon, path: "/dashboard" },
+      { title: "Dashboard", icon: DashboardIcon, path: "/" },
       { title: "All Leads", icon: LeaderboardIcon, path: "/leads" },
     ],
   },
