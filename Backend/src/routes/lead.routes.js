@@ -7,11 +7,12 @@ const {
   handleDeleteLead,
   handleGetLeads,
 } = require("../controllers/lead.controller");
+const { authMiddleware } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
 // नया Lead बनाना (Webhook / Website Form)
-router.post("/webhook", handleCreateLead);
+router.post("/webhook",authMiddleware, handleCreateLead);
 
 // सभी Leads लाना + Filters + Pagination
 router.get("/", handleGetLeads);
@@ -25,4 +26,4 @@ router.put("/:id", handleUpdateLead);
 // Lead Delete
 router.delete("/:id", handleDeleteLead);
 
-module.exports = router;
+module.exports = router; 

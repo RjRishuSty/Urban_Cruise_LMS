@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { flexCenter, flexEnd } from "../constants/flexUtils";
 import { authInputs } from "../constants/authInputs";
 import { authObject } from "../constants/authObject";
-import InputsField from "../components/InputsField";
 import { useDispatch } from "react-redux";
 import { authFormHandler } from "../utils/authFormHandler";
-import { useSnackbar } from "notistack"; 
+import { useSnackbar } from "notistack";
+import InputsField from "../components/Inputs/InputsField";
 
 const AuthPages = () => {
   const { pathname } = useLocation();
-   const { enqueueSnackbar } = useSnackbar(); 
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -21,27 +21,10 @@ const AuthPages = () => {
     email: "",
     password: "",
   });
-  const handleOnChage = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-       const result = await authFormHandler(formData, pageType, dispatch, enqueueSnackbar);
-
-      if (result.success) {
-        navigate("/");
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const pageType = pathname.includes("sign-in") ? "sign-in" : "sign-up";
+  const pageType = useMemo(
+    () => (pathname.includes("sign-in") ? "sign-in" : "sign-up"),
+    [pathname]
+  );
   const {
     heading,
     subHeading,
@@ -50,8 +33,33 @@ const AuthPages = () => {
     formSubtitle,
     formLinkText,
     buttonLabel,
-  } = authObject[pageType];
-  console.log("Formdata", formData);
+  } = useMemo(() => authObject[pageType], [pageType]);
+  const handleOnChange = useCallback((e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  }, []);
+
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      try {
+        const result = await authFormHandler(
+          formData,
+          pageType,
+          dispatch,
+          enqueueSnackbar
+        );
+        if (result.success) navigate("/");
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [formData, pageType, dispatch, enqueueSnackbar, navigate]
+  );
+
   return (
     <Box sx={{ height: "100vh" }}>
       <Grid container sx={{ height: "100%" }}>
@@ -113,8 +121,8 @@ const AuthPages = () => {
               </Typography>
             </Typography>
             <Grid
-            component='form'
-            onSubmit={handleSubmit}
+              component="form"
+              onSubmit={handleSubmit}
               container
               rowSpacing={2}
               columnSpacing={2}
@@ -130,7 +138,7 @@ const AuthPages = () => {
                       <InputsField
                         item={item}
                         formData={formData}
-                        onChange={handleOnChage}
+                        onChange={handleOnChange}
                       />
                     </Grid>
                     {isSignIn && (
@@ -160,7 +168,7 @@ const AuthPages = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                 disabled={loading}
+                disabled={loading}
                 sx={{ py: 1.5, textTransform: "uppercase" }}
               >
                 {loading ? "Please wait..." : buttonLabel}
@@ -173,4 +181,4 @@ const AuthPages = () => {
   );
 };
 
-export default AuthPages;
+export default React.memo(AuthPages);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Box, List, Divider, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import NavItem from "./NavItem";
@@ -13,56 +13,46 @@ const Sidebar = ({ isOpen }) => {
   const [showScrollbar, setShowScrollbar] = useState(false);
   const theme = useTheme();
   const location = useLocation();
-  const activePath = location.pathname
-  console.log(activePath);
+  const activePath = location.pathname;
 
   useEffect(() => {
     const sidebar = sidebarRef.current;
+    if (!sidebar) return;
 
-    const handleScroll = () => {
-      if (sidebar.scrollTop > 50) {
-        setShowScrollbar(true);
-      } else {
-        setShowScrollbar(false);
-      }
-    };
+    const handleScroll = () => setShowScrollbar(sidebar.scrollTop > 50);
 
-    if (sidebar) {
-      sidebar.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (sidebar) {
-        sidebar.removeEventListener("scroll", handleScroll);
-      }
-    };
+    sidebar.addEventListener("scroll", handleScroll);
+    return () => sidebar.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const sidebarWidth = isOpen ? SIDEBAR_WIDTH : MINI_SIDEBAR_WIDTH;
+
+  const scrollbarStyles = useMemo(
+    () => ({
+      "&::-webkit-scrollbar": {
+        width: showScrollbar ? "8px" : "0px",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        bgcolor: showScrollbar ? "primary.main" : "transparent",
+        borderRadius: 10,
+      },
+    }),
+    [showScrollbar]
+  );
 
   return (
     <Box
       ref={sidebarRef}
       sx={{
-        width: isOpen ? SIDEBAR_WIDTH : MINI_SIDEBAR_WIDTH,
-        flexShrink: 0,
+        width: sidebarWidth,
         height: "100vh",
         position: "fixed",
         bgcolor: "background.paper",
         borderRight: "1px solid rgba(145, 158, 171, 0.24)",
-        overflowX: "hidden",
         overflowY: "auto",
         transition: "width 0.3s",
         zIndex: theme.zIndex.appBar + 1,
-        "&::-webkit-scrollbar": {
-          width: showScrollbar ? "8px" : "0px",
-        },
-        "&::-webkit-scrollbar-track": {
-          backgroundColor: showScrollbar ? "background.paper" : "transparent",
-          borderRadius: "10px",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: showScrollbar ? "primary.main" : "transparent",
-          borderRadius: "10px",
-        },
+        ...scrollbarStyles,
       }}
     >
       <Box sx={{ p: 2, height: "100%" }}>
@@ -75,9 +65,14 @@ const Sidebar = ({ isOpen }) => {
         >
           <Typography
             variant="h6"
-            sx={{ fontWeight: 700, color: theme.palette.primary.main,textAlign:'center',textTransform:'uppercase' }}
+            sx={{
+              fontWeight: 700,
+              color: theme.palette.primary.main,
+              textAlign: "center",
+              textTransform: "uppercase",
+            }}
           >
-            {isOpen?'Urban Cruise':"LMS"}
+            {isOpen ? "Urban Cruise" : "LMS"}
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
         </Box>
@@ -105,7 +100,9 @@ const Sidebar = ({ isOpen }) => {
                   isActive={item.path === activePath}
                 />
               ))}
-              {isOpen && index < navItems.length - 1 && <Divider sx={{ my: 1 }} />}
+              {isOpen && index < navItems.length - 1 && (
+                <Divider sx={{ my: 1 }} />
+              )}
             </React.Fragment>
           ))}
         </List>
@@ -114,4 +111,4 @@ const Sidebar = ({ isOpen }) => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

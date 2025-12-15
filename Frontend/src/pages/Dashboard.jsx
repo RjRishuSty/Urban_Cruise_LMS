@@ -5,12 +5,7 @@ import SwiperSlider from "../components/SwiperSlider";
 
 const Dashboard = () => {
   return (
-    <Grid
-      container
-      rowSpacing={2}
-      columnSpacing={2}
-      // sx={{ border: "2px solid red" }}
-    >
+    <Grid container rowSpacing={2} columnSpacing={2}>
       <Grid size={{ xs: 12, sm: 12, md: 8 }}>
         <Cards useIn="welcomeCard" />
       </Grid>

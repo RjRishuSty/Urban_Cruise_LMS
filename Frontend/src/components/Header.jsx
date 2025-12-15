@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   AppBar,
   Toolbar,
@@ -15,15 +15,24 @@ import { useTheme } from "@mui/material/styles";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { flexCenter } from "../constants/flexUtils";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import { handleLogout } from "../utils/authFormHandler";
-import { useDispatch } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth, shallowEqual);
+  const handleToggleSidebar = useCallback(() => {
+    toggleSidebar();
+  }, [toggleSidebar]);
+
+  const handleUserLogout = useCallback(() => {
+    handleLogout(dispatch, navigate);
+  }, [dispatch, navigate]);
 
   return (
     <AppBar
@@ -39,7 +48,7 @@ const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
     >
       <Toolbar>
         <IconButton
-          onClick={toggleSidebar}
+          onClick={handleToggleSidebar}
           sx={{
             bgcolor: "primary.light",
             "&:hover": { bgcolor: "action.hover" },
@@ -78,7 +87,7 @@ const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
           </IconButton>
 
           <IconButton
-          onClick={() => handleLogout(dispatch, navigate)}
+            onClick={handleUserLogout}
             sx={{
               bgcolor: "primary.light",
               "&:hover": { bgcolor: "action.hover" },
@@ -87,7 +96,7 @@ const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
             <LogoutIcon color="action" />
           </IconButton>
           <Avatar
-            alt="Jaydon Frankie"
+            alt={user?.firstName?.[0]}
             src="/static/images/avatar/1.jpg"
             sx={{
               height: 40,
@@ -105,4 +114,4 @@ const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);

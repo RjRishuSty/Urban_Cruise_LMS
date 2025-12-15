@@ -5,7 +5,7 @@ const Lead = require("../models/lead.model");
 
 // Create Lead Service
 const createLeadService = async (data) => {
-  const { name, email, phone, service } = data;
+  const { name, email, phone, service, ownerId } = data;
 
   // Basic validation (improve as needed)
   if (!name && !email && !phone) {
@@ -17,6 +17,7 @@ const createLeadService = async (data) => {
     email,
     phone,
     service,
+    ownerId: ownerId || null,
     source: data.source || "website",
     campaign: data.campaign || null,
     adset: data.adset || null,
@@ -27,21 +28,8 @@ const createLeadService = async (data) => {
   return lead;
 };
 
-// Get All Leads (Filters + Pagination)
-const getLeadsService = async (query) => {
-  const { source, status, page = 1, limit = 25 } = query;
-
-  const filter = {};
-
-  if (source) filter.source = source;
-  if (status) filter.status = status;
-
-  const leads = await Lead.find(filter)
-    .sort({ createdAt: -1 })
-    .skip((page - 1) * limit)
-    .limit(Number(limit));
-
-  return leads;
+const getLeadsService = async () => {
+  return await Lead.find();
 };
 
 // Get Single Lead

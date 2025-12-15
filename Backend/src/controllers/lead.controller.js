@@ -12,7 +12,8 @@ const {
 // Create Lead (Website / Webhook)
 const handleCreateLead = async (req, res) => {
   try {
-    const lead = await createLeadService(req.body);
+    const lead = await createLeadService({ ...req.body,
+      ownerId: req.user._id});
 
     res.status(201).json({
       success: true,
@@ -28,11 +29,11 @@ const handleCreateLead = async (req, res) => {
 // Get All Leads
 const handleGetLeads = async (req, res) => {
   try {
-    const leads = await getLeadsService(req.query);
+    const leads = await getLeadsService();
 
     res.json({
+      message:'Leads fetched successfully',
       success: true,
-      count: leads.length,
       data: leads,
     });
   } catch (error) {

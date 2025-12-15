@@ -8,22 +8,23 @@ import { CssBaseline } from "@mui/material";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 import { SnackbarProvider } from "notistack";
-
-
+import AuthInitializer from "./components/AuthInitializer.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-         <SnackbarProvider
-          maxSnack={2} 
+        <SnackbarProvider
+          maxSnack={2}
           anchorOrigin={{
             vertical: "top",
             horizontal: "center",
           }}
         >
-        <App />
+          <AuthInitializer>
+            <App />
+          </AuthInitializer>
         </SnackbarProvider>
       </ThemeProvider>
     </Provider>

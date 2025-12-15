@@ -1,8 +1,42 @@
 import { Box, Button, Typography } from "@mui/material";
-import React from "react";
+import React, { memo, useMemo } from "react";
 import character from "../../assets/character-present.webp";
+import {Link} from 'react-router-dom';
+import { shallowEqual, useSelector } from "react-redux";
 
 const WelcomeCardContent = () => {
+  const { user } = useSelector((state) => state.auth, shallowEqual);
+  const fullName = useMemo(
+    () => `${user.firstName} ${user.lastName}`,
+    [user.firstName, user.lastName]
+  );
+  const buttonStyles = useMemo(
+    () => ({
+      backgroundColor: "primary.main",
+      "&:hover": {
+        backgroundColor: "primary.dark",
+      },
+    }),
+    []
+  );
+  const descriptionStyles = useMemo(
+    () => ({
+      color: "#ccc",
+      maxWidth: 450,
+      mb: 3,
+    }),
+    []
+  );
+
+  const captionStyles = useMemo(
+    () => ({
+      display: "block",
+      mt: 2,
+      color: "#fff",
+    }),
+    []
+  );
+
   return (
     <>
       <Box
@@ -22,43 +56,32 @@ const WelcomeCardContent = () => {
         <Typography
           gutterBottom
           variant="h5"
-          sx={{ color: "#fff", mb: 2, mt: 1 }}
+          sx={{ color: "#fff", mb: 2, mt: 1,textTransform:'capitalize' }}
         >
-          Jaydon Frankie
+        {fullName}
         </Typography>
 
         <Typography
           variant="body1"
-          sx={{
-            color: "#ccc",
-            maxWidth: 450,
-            mb: 3,
-          }}
+          sx={descriptionStyles}
         >
           Manage all your business leads in one place. Track website, Meta and
           Google ad leads in real-time and convert faster.
         </Typography>
         <Button
+        component={Link}
+        to='/leads'
           variant="contained"
           color="primary"
           size="large"
-          sx={{
-            backgroundColor: "primary.main",
-            "&:hover": {
-              backgroundColor: "primary.dark",
-            },
-          }}
+          sx={buttonStyles}
         >
           View Leads
         </Button>
 
         <Typography
           variant="caption"
-          sx={{
-            display: "block",
-            mt: 2,
-            color: "#fff",
-          }}
+          sx={captionStyles}
         >
           Your smart workspace for managing all sales activities.
         </Typography>
@@ -81,4 +104,4 @@ const WelcomeCardContent = () => {
   );
 };
 
-export default WelcomeCardContent;
+export default memo(WelcomeCardContent);
