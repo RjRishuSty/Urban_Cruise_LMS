@@ -1,28 +1,26 @@
 import { Button } from "@mui/material";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import FormModal from "./FormModal";
 
-const CreateLeads = ({ title, pageType }) => {
+const CreateLeads = ({ pageType }) => {
   const [open, setOpen] = useState(false);
 
-  const handleOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
   return (
     <>
-      <Button onClick={handleOpen} variant="outlined" startIcon={<AddIcon />}>
-        Create {title}
+      <Button
+        id="create-lead-btn"
+        onClick={() => setOpen(true)}
+        variant="outlined"
+        startIcon={<AddIcon />}
+      >
+        Create Lead
       </Button>
 
       {open && (
         <FormModal
           open={open}
-          handleClose={handleClose}
+          handleClose={() => setOpen(false)}
           pageType={pageType}
           title="Create Lead"
         />
@@ -30,5 +28,6 @@ const CreateLeads = ({ title, pageType }) => {
     </>
   );
 };
+
 
 export default React.memo(CreateLeads);

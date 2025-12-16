@@ -8,14 +8,37 @@ import {
 } from "@mui/material";
 import React, { useCallback, useMemo } from "react";
 
-const SelectInputs = ({ data, value, size = "small", setFormData = () => {} }) => {
+const SelectInputs = ({
+  data,
+  value,
+  size = "small",
+  setFormData = () => {},
+  onChange, 
+  isObjectUpdater = false, 
+}) => {
   const options = useMemo(() => data.options || [], [data.options]);
 
   const handleChange = useCallback(
     (e) => {
-      setFormData((prev) => ({ ...prev, [data.id]: e.target.value }));
+      const selectedValue = e.target.value;
+
+      console.log(`Selected value for ${data.id}:`, selectedValue);
+
+      // Update formData / filters
+      if (setFormData) {
+        if (isObjectUpdater) {
+          // Form: update state object
+          setFormData((prev) => ({ ...prev, [data.id]: selectedValue }));
+        } else {
+          // Filter: pass value directly
+          setFormData(selectedValue);
+        }
+      }
+
+      // Optional callback for extra handling
+      if (onChange) onChange(selectedValue);
     },
-    [data.id, setFormData]
+    [data.id, setFormData, onChange, isObjectUpdater]
   );
 
   const InputComponent = useMemo(() => {
@@ -29,8 +52,7 @@ const SelectInputs = ({ data, value, size = "small", setFormData = () => {} }) =
   }, [data.icon, data.label]);
 
   const formControlStyles = useMemo(() => ({ width: data.width || "100%" }), [data.width]);
-
-  const selectStyles = { bgcolor: "#fff", color: "text.primary" }
+  const selectStyles = { bgcolor: "#fff", color: "text.primary" };
 
   return (
     <FormControl size={size} sx={formControlStyles} disabled={data.disabled}>
@@ -51,7 +73,11 @@ const SelectInputs = ({ data, value, size = "small", setFormData = () => {} }) =
           </MenuItem>
         )}
         {options.map((item) => (
-          <MenuItem key={item.value} value={item.value} sx={{ textTransform: "capitalize" }}>
+          <MenuItem
+            key={item.value}
+            value={item.value}
+            sx={{ textTransform: "capitalize" }}
+          >
             {item.label}
           </MenuItem>
         ))}

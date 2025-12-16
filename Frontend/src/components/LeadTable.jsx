@@ -1,7 +1,6 @@
 import { Table, TableHead, TableBody, Card, Divider } from "@mui/material";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useSnackbar } from "notistack";
 import { getAllLeads } from "../utils/leadFormHandler";
 import TableIntro from "./table/TableIntro";
 import TableBodyData from "./table/TableBodyData";
@@ -10,42 +9,48 @@ import FormModal from "./FormModal";
 import TablePaginations from "./table/TablePaginations";
 import TableSkeleton from "../loader/TableSkeleton";
 
-const LeadTable = ({ title, openModal, setOpenModal }) => {
+const LeadTable = ({ title, defaultFilters = {} }) => {
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [filters, setFilters] = useState({ source: "", status: "", sort: "" });
+  const [filters, setFilters] = useState(defaultFilters);
+  const [openModal, setOpenModal] = useState(false);
 
-  const { selectedLead } = useSelector(
+  const { leads, selectedLead } = useSelector(
     (state) => state.lead,
     shallowEqual
   );
 
+  // Fetch all leads on mount
   useEffect(() => {
-    getAllLeads(setLoading, dispatch, enqueueSnackbar);
-  }, [dispatch, enqueueSnackbar]);
+    getAllLeads(setLoading, dispatch);
+  }, [dispatch]);
 
-  // const totalLeads = useMemo(() => leads.length, [leads]);
-
-  // const handlePageChange = useCallback((newPage) => {
-  //   setPage(newPage);
-  // }, []);
-
-  // const handleRowsPerPageChange = useCallback((size) => {
-  //   setRowsPerPage(size);
-  //   setPage(1);
-  // }, []);
+  // Sync filters if URL changes
+  useEffect(() => {
+    setFilters(defaultFilters);
+  }, [defaultFilters]);
 
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
-  }, [setOpenModal]);
+  }, []);
+
+  // Filter leads based on filters
+  const filteredLeads = useMemo(() => {
+    return leads.filter((lead) => {
+      return (
+        (!filters.source || lead.source === filters.source) &&
+        (!filters.status || lead.status === filters.status) &&
+        (!filters.sort || lead.sort === filters.sort)
+      );
+    });
+  }, [leads, filters]);
 
   const showPagination = useMemo(() => {
-    return filters && filters.source ? true : true; // Can adjust logic to hide if no leads
-  }, [filters]);
+    return filteredLeads.length > rowsPerPage;
+  }, [filteredLeads.length, rowsPerPage]);
 
   if (loading) {
     return <TableSkeleton />;
@@ -53,21 +58,26 @@ const LeadTable = ({ title, openModal, setOpenModal }) => {
 
   return (
     <Card sx={{ p: 3 }}>
-      <TableIntro title={title} filters={filters} setFilters={setFilters} />
-      <Divider />
+      {/* Filters */}
+      <TableIntro title={title} filters={filters} setFilters={setFilters} filteredLeads={filteredLeads} />
+      
+      <Divider sx={{ my: 2 }} />
 
+      {/* Table */}
       <Table>
         <TableHeader />
         <TableBody>
-          <TableBodyData title={title}
-          setOpenModal={setOpenModal}
-          currentPage={page}
-          rowsPerPage={rowsPerPage}
-          filters={filters}
+          <TableBodyData
+            title={title}
+            setOpenModal={setOpenModal}
+            currentPage={page}
+            rowsPerPage={rowsPerPage}
+            filters={filters}
           />
         </TableBody>
       </Table>
 
+      {/* Update Lead Modal */}
       {openModal && selectedLead && (
         <FormModal
           open={openModal}
@@ -77,9 +87,12 @@ const LeadTable = ({ title, openModal, setOpenModal }) => {
         />
       )}
 
+      {/* Pagination */}
       {showPagination && (
         <TablePaginations
-          totalCount={10} // replace with filtered leads count dynamically
+          totalCount={filteredLeads.length}
+          currentPage={page}
+          pageSize={rowsPerPage}
           onPageChange={(newPage) => setPage(newPage)}
           onPageSizeChange={(size) => setRowsPerPage(size)}
         />

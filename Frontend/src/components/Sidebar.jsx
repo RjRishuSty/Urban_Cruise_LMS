@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
-import { Box, List, Divider, Typography } from "@mui/material";
+import { Box, List, Divider, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import NavItem from "./NavItem";
 import { navItems } from "../constants/navItems";
@@ -14,9 +14,10 @@ const Sidebar = ({ isOpen }) => {
   const theme = useTheme();
   const location = useLocation();
   const activePath = location.pathname;
+   const isTablet = useMediaQuery("(max-width:1139px)");
 
   useEffect(() => {
-    const sidebar = sidebarRef.current;
+    const sidebar = sidebarRef.current; 
     if (!sidebar) return;
 
     const handleScroll = () => setShowScrollbar(sidebar.scrollTop > 50);
@@ -25,7 +26,8 @@ const Sidebar = ({ isOpen }) => {
     return () => sidebar.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const sidebarWidth = isOpen ? SIDEBAR_WIDTH : MINI_SIDEBAR_WIDTH;
+  const sidebarWidth = isOpen ? SIDEBAR_WIDTH : isTablet ? 0 : MINI_SIDEBAR_WIDTH;
+
 
   const scrollbarStyles = useMemo(
     () => ({

@@ -16,7 +16,6 @@ export const filterData = [
     options: [
       { label: "New", value: "new" },
       { label: "Contacted", value: "contacted" },
-      { label: "Converted", value: "converted" },
       { label: "Lost", value: "lost" },
     ],
   },

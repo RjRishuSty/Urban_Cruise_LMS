@@ -17,12 +17,13 @@ const App = () => {
           element: <PrivateRoute />,
           children: [
             { path: "", element: <Dashboard /> },
-            { path: "leads", element: <AllLeads/> },
-            { path: "/leads/meta", element: <AllLeads /> },
-            { path: "/leads/website", element: <AllLeads/> },
-            { path: "/leads/google", element: <AllLeads /> },
+            { path: "leads", element: <AllLeads /> },
+            {
+              path: "leads/:source?",
+              element: <AllLeads />,
+            },
             //Edit...........
-            { path: "leads/:id?", element: <AllLeads /> }
+            { path: "leads/:id?", element: <AllLeads /> },
           ],
         },
         {

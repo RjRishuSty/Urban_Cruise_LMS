@@ -40,6 +40,7 @@ const FormModal = ({ open, handleClose, title, pageType }) => {
   const [formData, setFormData] = useState(initialFormState);
   const [loading, setLoading] = useState(false);
 
+  console.log("formModal",formData)
   useEffect(() => {
     if (pageType === "update" && selectedLead) {
       setFormData({
@@ -47,9 +48,7 @@ const FormModal = ({ open, handleClose, title, pageType }) => {
         email: selectedLead.email || "",
         phone: selectedLead.phone || "",
         service: selectedLead.service || "",
-        ownerId: user
-          ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user._id
-          : "",
+        ownerId:  user._id,
         source: selectedLead.source || "",
         status: selectedLead.status || "",
       });

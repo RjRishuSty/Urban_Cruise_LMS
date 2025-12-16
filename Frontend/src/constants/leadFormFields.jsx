@@ -39,7 +39,6 @@ export const leadFields = [
     options: [
       { label: "New", value: "new" },
       { label: "Contacted", value: "contacted" },
-      { label: "Converted", value: "converted" },
       { label: "Lost", value: "lost" },
     ],
     showOn: ["update"],

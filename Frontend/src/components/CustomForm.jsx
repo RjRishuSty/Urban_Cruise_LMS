@@ -49,9 +49,7 @@ const CustomForm = ({ useIn, pageType, onChange, formData, setFormData }) => {
                       value={formData[item.id] || ""}
                       size="medium"
                       setFormData={setFormData}
-                      onChange={(e) =>
-                        handleSelectChange(item.id, e.target.value)
-                      }
+                      isObjectUpdater={true}
                     />
                   )}
 

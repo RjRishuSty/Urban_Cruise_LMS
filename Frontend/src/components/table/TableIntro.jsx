@@ -1,13 +1,21 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, Button, useMediaQuery } from "@mui/material";
 import React, { useMemo } from "react";
 import { flexBetween, flexStart } from "../../constants/flexUtils";
 import { filterData } from "../../constants/filterByData";
 import SelectInputs from "../Inputs/SelectInputs";
-import { shallowEqual, useSelector } from "react-redux";
 import CreateLeads from "../CreateLeads";
+import ExportButton from "../ExportButton";
+import ReusableSpeedDial from "../ReusableSpeedDial";
 
-const TableIntro = ({ title, filters, setFilters }) => {
-  const leads = useSelector((state) => state.lead.leads, shallowEqual);
+const TableIntro = ({ title, filters, setFilters, filteredLeads }) => {
+  const miniLaptopDashboard = useMediaQuery("(max-width:1384px)");
+  const isFilterActive = useMemo(
+    () =>
+      Object.values(filters).some(
+        (value) => value !== "" && value !== null && value !== undefined
+      ),
+    [filters]
+  );
 
   const filterSelects = useMemo(
     () =>
@@ -16,28 +24,39 @@ const TableIntro = ({ title, filters, setFilters }) => {
           key={item.id}
           data={item}
           value={filters[item.id] || ""}
-          setFormData={(newVal) =>
+          setFormData={(val) =>
             setFilters((prev) => ({
               ...prev,
-              [item.id]: String(newVal[item.id] ?? newVal), // always string
+              [item.id]: val,
             }))
           }
+          isObjectUpdater={false}
         />
       )),
     [filters, setFilters]
   );
 
+  const handleClearFilters = () => {
+    const clearedFilters = {};
+    Object.keys(filters).forEach((key) => {
+      clearedFilters[key] = "";
+    });
+    setFilters(clearedFilters);
+  };
+
   const titleStyles = useMemo(
-    () => ({ fontWeight: 500, letterSpacing: 1 }),
+    () => ({ fontWeight: 600, letterSpacing: 1, textTransform: "capitalize" }),
     []
   );
-
-  const filterBoxStyles = useMemo(() => ({ ...flexStart, gap: 3 }), []);
-
+  const filterBoxStyles = useMemo(
+    () => ({ ...flexStart, gap: 2, alignItems: "center" }),
+    []
+  );
   const filterLabelStyles = useMemo(() => ({ letterSpacing: 1 }), []);
 
   return (
     <Stack direction="row" sx={{ ...flexBetween, mb: 2 }}>
+    
       <Typography variant="body1" sx={titleStyles}>
         {title}
       </Typography>
@@ -46,8 +65,26 @@ const TableIntro = ({ title, filters, setFilters }) => {
           Filter By
         </Typography>
         {filterSelects}
+        {isFilterActive && (
+          <Button size="small" variant="outlined" onClick={handleClearFilters}>
+            Clear Filters
+          </Button>
+        )}
       </Box>
-      {leads.length > 0 && <CreateLeads title={title} pageType="create" />}
+      {miniLaptopDashboard ? (
+  <ReusableSpeedDial
+    CreateComponent={<CreateLeads pageType="create" />}
+    ExportComponent={
+      <ExportButton leads={filteredLeads} filters={filters} />
+    }
+  />
+) : (
+  <>
+    <ExportButton leads={filteredLeads} filters={filters} />
+    <CreateLeads pageType="create" />
+  </>
+)}
+
     </Stack>
   );
 };

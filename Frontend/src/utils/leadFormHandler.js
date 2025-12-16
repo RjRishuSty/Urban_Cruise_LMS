@@ -3,13 +3,12 @@ import { api } from "./api";
 import { addLead, deleteLead, setLeads, updateLead } from "../store/slices/lead.slice";
 
 // TODO: Get all lead data ...........
-export const getAllLeads = async (setLoading, dispatch, enqueueSnackbar) => {
+export const getAllLeads = async (setLoading, dispatch) => {
   try {
     setLoading(true);
     const response = await axios.get(`${api}/leads`);
     if (response.status === 200) {
       dispatch(setLeads(response.data.data));
-      enqueueSnackbar(response.data.message, { variant: "success" });
     }
   } catch (error) {
     console.log(error);
@@ -65,7 +64,7 @@ export const handleCreateLead = async (formData, enqueueSnackbar, dispatch) => {
     const response = await axios.post(`${api}/leads/webhook`, formData, {
       withCredentials: true,
     });
-    dispatch(dispatch(addLead(response.data.data)));
+    dispatch(addLead(response.data.data));
     enqueueSnackbar("Lead Create success", { variant: "success" });
     return { success: true, data: response.data };
   } catch (error) {
