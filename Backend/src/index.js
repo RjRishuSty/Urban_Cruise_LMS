@@ -14,13 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 8081;
 
 // Middleware
-app.use(
-  cors({
-    origin: "http://localhost:5173", 
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  })
-);
+app.use(cors({ origin: "*", credentials: true }));
 app.use(morgan("dev")); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,5 +39,7 @@ console.log("JSON PARSER TEST WORKING");
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+   const renderURL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+  console.log(`🚀 Server running at ${renderURL}`);
+  console.log("📦 Ready to accept requests");
 });
