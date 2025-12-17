@@ -10,13 +10,9 @@ import ReusableSpeedDial from "../ReusableSpeedDial";
 const TableIntro = ({ title, filters, setFilters, filteredLeads }) => {
   const miniLaptopDashboard = useMediaQuery("(max-width:1384px)");
   const isMobile = useMediaQuery("(max-width:660px)");
-  const isFilterActive = useMemo(
-    () =>
-      Object.values(filters).some(
-        (value) => value !== "" && value !== null && value !== undefined
-      ),
-    [filters]
-  );
+ const isFilterActive = Object.values(filters).some(
+  (value) => value !== "" && value !== null && value !== undefined
+);
 
   const filterSelects = useMemo(
     () =>

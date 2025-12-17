@@ -29,9 +29,9 @@ const LeadTable = ({ title, defaultFilters = {} }) => {
   }, [dispatch]);
 
   // Sync filters if URL changes
-  useEffect(() => {
-    setFilters(defaultFilters);
-  }, [defaultFilters]);
+  // useEffect(() => {
+  //   setFilters(defaultFilters);
+  // }, [defaultFilters]);
 
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
@@ -87,7 +87,7 @@ const LeadTable = ({ title, defaultFilters = {} }) => {
         />
       )}
 
-      {/* Pagination */}
+      {/* Pagination */} 
       {showPagination && (
         <TablePaginations
           totalCount={filteredLeads.length}

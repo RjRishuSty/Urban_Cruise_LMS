@@ -1,20 +1,17 @@
-import React, { useMemo } from "react";
-import { useParams } from "react-router-dom";
+import React  from "react";
+import { useLocation, useParams } from "react-router-dom";
 import LeadTable from "../components/LeadTable";
 
 const AllLeads = () => {
-  const { source } = useParams(); 
+  const { source } = useParams();
+  const { pathname } = useLocation();
 
-  const defaultFilters = useMemo(() => {
-    return source ? { source } : {};
-  }, [source]);
+  const initialFilters = source && source.length !== 24 ? { source } : {};
 
-  return (
-    <LeadTable
-      title={source ? `${source} Leads` : "All Leads"}
-      defaultFilters={defaultFilters}
-    />
-  );
+  const title = initialFilters.source
+    ? `${initialFilters.source} Leads`
+    : "All Leads";
+  return <LeadTable title={title} defaultFilters={initialFilters} />;
 };
 
 export default AllLeads;
