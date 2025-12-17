@@ -13,7 +13,7 @@ const {
 const handleCreateLead = async (req, res) => {
   try {
     const lead = await createLeadService({ ...req.body,
-      ownerId: req.user._id});
+      ownerId: req.user?._id || null});
 
     res.status(201).json({
       success: true,
