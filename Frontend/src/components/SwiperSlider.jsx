@@ -20,7 +20,7 @@ const SwiperSlider = () => {
 
   const swiperStyles = useMemo(
     () => ({
-      width: 390,
+      width: "100%",
       "--swiper-pagination-color": "#55552b",
       "--swiper-pagination-bullet-inactive-color": "#cce6ff",
       "--swiper-pagination-bullet-inactive-opacity": "1",

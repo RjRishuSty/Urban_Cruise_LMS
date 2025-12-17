@@ -5,6 +5,7 @@ import {
   Select,
   InputAdornment,
   OutlinedInput,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useCallback, useMemo } from "react";
 
@@ -15,8 +16,10 @@ const SelectInputs = ({
   setFormData = () => {},
   onChange, 
   isObjectUpdater = false, 
+  isFilter = false, 
 }) => {
   const options = useMemo(() => data.options || [], [data.options]);
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleChange = useCallback(
     (e) => {
@@ -51,7 +54,10 @@ const SelectInputs = ({
     );
   }, [data.icon, data.label]);
 
-  const formControlStyles = useMemo(() => ({ width: data.width || "100%" }), [data.width]);
+  const formControlStyles = useMemo( () => ({
+    width: isMobile && isFilter ? 70 : data.width || "100%",
+  }),
+  [isMobile, isFilter, data.width]);
   const selectStyles = { bgcolor: "#fff", color: "text.primary" };
 
   return (

@@ -33,7 +33,7 @@ const CustomForm = ({ useIn, pageType, onChange, formData, setFormData }) => {
               return (
                 <Grid
                   key={item.id}
-                  size={{ xs: 12, sm: 12, md: isTextarea ? 12 : 6 }}
+                  size={{ xs: 12, sm: isTextarea ? 12 : 6 , md: isTextarea ? 12 : 6 }}
                 >
                   {isTextarea && (
                     <TextAreaInputs

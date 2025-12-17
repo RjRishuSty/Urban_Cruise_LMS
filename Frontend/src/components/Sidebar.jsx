@@ -15,7 +15,7 @@ const Sidebar = ({ isOpen }) => {
   const location = useLocation();
   const activePath = location.pathname;
    const isTablet = useMediaQuery("(max-width:1139px)");
-
+ 
   useEffect(() => {
     const sidebar = sidebarRef.current; 
     if (!sidebar) return;

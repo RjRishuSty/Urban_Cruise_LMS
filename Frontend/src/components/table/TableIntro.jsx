@@ -9,6 +9,7 @@ import ReusableSpeedDial from "../ReusableSpeedDial";
 
 const TableIntro = ({ title, filters, setFilters, filteredLeads }) => {
   const miniLaptopDashboard = useMediaQuery("(max-width:1384px)");
+  const isMobile = useMediaQuery("(max-width:660px)");
   const isFilterActive = useMemo(
     () =>
       Object.values(filters).some(
@@ -31,6 +32,7 @@ const TableIntro = ({ title, filters, setFilters, filteredLeads }) => {
             }))
           }
           isObjectUpdater={false}
+          isFilter   
         />
       )),
     [filters, setFilters]
@@ -57,13 +59,13 @@ const TableIntro = ({ title, filters, setFilters, filteredLeads }) => {
   return (
     <Stack direction="row" sx={{ ...flexBetween, mb: 2 }}>
     
-      <Typography variant="body1" sx={titleStyles}>
+      <Typography variant={isMobile?"caption":"body1"} sx={titleStyles}>
         {title}
       </Typography>
       <Box sx={filterBoxStyles}>
-        <Typography variant="body2" sx={filterLabelStyles}>
+       {!isMobile&&<Typography variant="body2" sx={filterLabelStyles}>
           Filter By
-        </Typography>
+        </Typography>}
         {filterSelects}
         {isFilterActive && (
           <Button size="small" variant="outlined" onClick={handleClearFilters}>

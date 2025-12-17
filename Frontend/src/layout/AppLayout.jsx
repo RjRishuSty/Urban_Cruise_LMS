@@ -12,20 +12,20 @@ const AppLayout = () => {
   );
 
   const isTablet = useMediaQuery("(max-width:1139px)");
+  const isMobile = useMediaQuery("(max-width:600px)");
 
-  // On tablet, sidebar is closed by default
+ 
   const [isSidebarOpen, setIsSidebarOpen] = useState(isTablet?false:true);
 
   const handleSidebarToggle = useCallback(() => {
     setIsSidebarOpen((prev) => !prev);
   }, []);
 
-  // Sidebar width logic
+ 
   const sidebarWidth = isSidebarOpen ? 280 : isTablet ? 0 : 150;
 
   return (
     <Box sx={{ display: "flex"}}>
-      {/* Render Sidebar only if not auth page */}
       {!isAuthPage && <Sidebar isOpen={isSidebarOpen} />}
 
       {!isAuthPage && (
@@ -41,12 +41,12 @@ const AppLayout = () => {
         sx={{
           flexGrow: 1,
           ml: !isAuthPage ? `${sidebarWidth}px` : 0,
-          p:  isTablet ? 0 : !isAuthPage ? 2 : 0,
-          width: "100%",
+          p:  isTablet ? 1: !isAuthPage ? 2 : 0,
+          width: "80%",
           minHeight: "90vh",
           bgcolor: "background.default",
           transition: "margin-left 0.3s",
-          mt: !isAuthPage ? 7 : 0,
+          mt: isMobile?9:!isAuthPage ? 7 : 0,
          
         }}
       >

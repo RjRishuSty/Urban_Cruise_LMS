@@ -92,7 +92,7 @@ const WelcomeCardContent = () => {
         src={character}
         alt="Dashboard Illustration"
         sx={{
-          width: { xs: 150, sm: 200, md: 250 },
+          width: { xs: 150, sm: 200, md: "100%" },
           height: { xs: 150, sm: 200, md: 250 },
           zIndex: 2,
           userSelect: "none",

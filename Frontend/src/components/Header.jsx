@@ -24,7 +24,6 @@ const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { user } = useSelector((state) => state.auth, shallowEqual);
   const handleToggleSidebar = useCallback(() => {
     toggleSidebar();
@@ -42,7 +41,7 @@ const Header = ({ toggleSidebar, sidebarWidth, isOpen }) => {
         left: sidebarWidth,
         height: "auto",
         bgcolor: "background.default",
-        boxShadow: "none",
+        boxShadow:"none",
         zIndex: theme.zIndex.appBar,
       }}
     >

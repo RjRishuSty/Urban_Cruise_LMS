@@ -5,6 +5,7 @@ import {
   TableCell,
   TableRow,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useMemo } from "react";
 import CreateLeads from "../CreateLeads";
@@ -17,6 +18,7 @@ import { useLocation } from "react-router-dom";
 const TableBodyData = ({ title, setOpenModal, currentPage, rowsPerPage ,filters }) => {
   const leads = useSelector((state) => state.lead.leads, shallowEqual);
   const { pathname } = useLocation();
+  const isMobile = useMediaQuery("(max-width:850px)");
 const sourceMap = {
     "/leads/website": "website",
     "/leads/meta": "meta",
@@ -82,16 +84,16 @@ const sourceMap = {
             key={item._id}
             sx={{ bgcolor: even ? "primary.light" : "text.secondary" }}
           >
-            <TableCell>{item.name}</TableCell>
-            <TableCell>{item.email}</TableCell>
-            <TableCell>{item.phone}</TableCell>
-            <TableCell>{item.source}</TableCell>
-            <TableCell>{item.status}</TableCell>
+            <TableCell variant="caption" sx={{color:'text.primary',textTransform:'capitalize'}}>{item.name}</TableCell>
+            <TableCell variant="caption" sx={{color:'text.primary'}}>{item.email}</TableCell>
+           {!isMobile&&<> <TableCell variant="caption" sx={{color:'text.primary',textTransform:'capitalize'}}>{item.phone}</TableCell>
+            <TableCell variant="caption" sx={{color:'text.primary',textTransform:'capitalize'}}>{item.source}</TableCell>
+            <TableCell variant="caption" sx={{color:'text.primary',textTransform:'capitalize'}}>{item.status}</TableCell>
             <TableCell>
               {item.createdAt
                 ? new Date(item.createdAt).toLocaleDateString()
                 : "-"}
-            </TableCell>
+            </TableCell></>}
             <EditOrDeleteBtn item={item} setOpenModal={setOpenModal} />
           </TableRow>
         );

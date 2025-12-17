@@ -8,8 +8,11 @@ import {
   authCheckCompleted,
 } from "../store/slices/auth.slice";
 import DashboardSkeleton from "../loader/DashboardSkeleton";
+import { useMediaQuery } from "@mui/material";
+import LoginSkeleton from "../loader/LoginSkeleton";
 
 const AuthInitializer = ({ children }) => {
+  const isMobile = useMediaQuery("(max-width:600px)");
   const dispatch = useDispatch();
   const { authChecked } = useSelector((state) => state.auth, shallowEqual);
 
@@ -30,7 +33,7 @@ const AuthInitializer = ({ children }) => {
   }, [checkAuth]);
 
   if (!authChecked) {
-    return <DashboardSkeleton/>
+    return isMobile?<LoginSkeleton/>:<DashboardSkeleton/>
   }
 
   return children;

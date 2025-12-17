@@ -1,29 +1,30 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { Box, Modal, Typography, Button, Stack } from "@mui/material";
+import { Box, Modal, Typography, Button, Stack, useMediaQuery } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import CustomForm from "./CustomForm";
 import { handleCreateLead, handleUpdateLead } from "../utils/leadFormHandler";
 
+
+
+const FormModal = ({ open, handleClose, title, pageType }) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const isMobile = useMediaQuery("(max-width:750px)");
+
+  const { user } = useSelector((state) => state.auth, shallowEqual);
+  const { selectedLead } = useSelector((state) => state.lead, shallowEqual);
 const modalStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 700,
+  width: isMobile?"95%":700,
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: 2,
-  p: 5,
+  p: isMobile?3:5,
 };
-
-const FormModal = ({ open, handleClose, title, pageType }) => {
-  const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
-
-  const { user } = useSelector((state) => state.auth, shallowEqual);
-  const { selectedLead } = useSelector((state) => state.lead, shallowEqual);
-
   const initialFormState = useMemo(
     () => ({
       name: "",
@@ -94,7 +95,7 @@ const FormModal = ({ open, handleClose, title, pageType }) => {
   );
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleClose} sx={{width:'auto'}}>
       <Box sx={modalStyle}>
         <Typography variant="h6" mb={2}>
           {title}

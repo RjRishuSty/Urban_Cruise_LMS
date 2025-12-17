@@ -1,12 +1,26 @@
-import { TableCell, TableHead, TableRow } from "@mui/material";
+import { TableCell, TableHead, TableRow, useMediaQuery } from "@mui/material";
 import React, { useMemo } from "react";
 
 const TableHeader = () => {
+  const isMobile = useMediaQuery("(max-width:850px)");
 
-  const headers = useMemo(
-    () => ["Name", "Email", "Phone", "Source", "Status", "Created", "Actions"],
-    []
-  );
+  const headers = useMemo(() => {
+    const allHeaders = [
+      "Name",
+      "Email",
+      "Phone",
+      "Source",
+      "Status",
+      "Created",
+      "Actions",
+    ];
+
+    if (isMobile) {
+      return ["Name", "Email", "Actions"];
+    }
+
+    return allHeaders;
+  }, [isMobile]);
 
   return (
     <TableHead>

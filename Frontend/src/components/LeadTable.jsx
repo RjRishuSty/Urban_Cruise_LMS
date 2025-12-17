@@ -57,7 +57,7 @@ const LeadTable = ({ title, defaultFilters = {} }) => {
   }
 
   return (
-    <Card sx={{ p: 3 }}>
+    <Card sx={{ p: 3}}>
       {/* Filters */}
       <TableIntro title={title} filters={filters} setFilters={setFilters} filteredLeads={filteredLeads} />
       
