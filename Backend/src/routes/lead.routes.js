@@ -12,7 +12,7 @@ const { authMiddleware } = require("../middleware/auth.middleware");
 const router = express.Router();
 
 // नया Lead बनाना (Webhook / Website Form)
-router.post("/webhook",authMiddleware, handleCreateLead);
+router.post("/webhook", handleCreateLead);
 
 // सभी Leads लाना + Filters + Pagination
 router.get("/", handleGetLeads);

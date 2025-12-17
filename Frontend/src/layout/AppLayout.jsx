@@ -41,12 +41,12 @@ const AppLayout = () => {
         sx={{
           flexGrow: 1,
           ml: !isAuthPage ? `${sidebarWidth}px` : 0,
-          p:  isTablet ? 1: !isAuthPage ? 2 : 0,
+          p:  isMobile?0:isTablet ? 1: !isAuthPage ? 2 : 0,
           width: "80%",
           minHeight: "90vh",
           bgcolor: "background.default",
           transition: "margin-left 0.3s",
-          mt: isMobile?9:!isAuthPage ? 7 : 0,
+          mt:!isAuthPage ? 8 : 0,
          
         }}
       >

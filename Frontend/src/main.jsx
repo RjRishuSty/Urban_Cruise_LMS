@@ -4,21 +4,25 @@ import "./index.css";
 import App from "./App.jsx";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./theme.js";
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, useMediaQuery } from "@mui/material";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 import { SnackbarProvider } from "notistack";
 import AuthInitializer from "./components/AuthInitializer.jsx";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
+
+// eslint-disable-next-line react-refresh/only-export-components
+const Root = () => {
+  const isMobile = useMediaQuery("(max-width:600px)");
+
+  return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <SnackbarProvider
           maxSnack={2}
           anchorOrigin={{
-            vertical: "top",
+            vertical: isMobile ? "bottom" : "top",
             horizontal: "center",
           }}
         >
@@ -28,5 +32,12 @@ createRoot(document.getElementById("root")).render(
         </SnackbarProvider>
       </ThemeProvider>
     </Provider>
+  );
+};
+
+// Render the app
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <Root />
   </StrictMode>
 );
